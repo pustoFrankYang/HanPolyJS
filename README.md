@@ -3,10 +3,13 @@
 
 It can now be accessed on: https://hanpoly.on.fleek.co/
 
-Temporarily the site can only run raw sql... like
+Looking forward to your feedback.
 
-```sql
-select * from mcpdict
-```
+# TODO List
 
-But OMG it is a wonderful beginning.
+- [ ] Pagination
+- [ ] Unify card size
+- [ ] Interprete the formatting symbols in the sqlite, like those form gray font
+- [ ] Other ways to display, e.g. jp, kr, vn scripts, IPA
+- [ ] Better ways to search on the romanizations
+- [ ] My practice (3500 common characters first)

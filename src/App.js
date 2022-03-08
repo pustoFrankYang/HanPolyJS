@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
 import initSqlJs from "sql.js";
+import ResultsTable from "./components/ResultsTable"
 import {HashRouter as Router} from 'react-router-dom';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+
+
+import HansContainer from './components/HansContainer'
 
 // Required to let webpack 4 know it needs to copy the wasm file to our assets
 import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm";
@@ -9,7 +16,7 @@ import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/
 export default function App() {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
-
+  
 
 
   useEffect(async () => {
@@ -43,8 +50,10 @@ function isChinese(s) {
 function SQLRepl({ db }) {
   const [error, setError] = useState(null);
   const [results, setResults] = useState([]);
+  const [isCardMode, setIsCardMode] = useState(true);
 
   function exec(sql) {
+    if (sql == '') return;
     try {
       // The sql is executed synchronously on the UI thread.
       // You may want to use a web worker here instead
@@ -67,7 +76,7 @@ function SQLRepl({ db }) {
                          OR jp_tou LIKE '%${sql}%'
                          OR jp_kwan LIKE '%${sql}%'
                          OR jp_other LIKE '%${sql}%'
-                         LIMIT 100`
+                         LIMIT 72`
         }
       setResults(db.exec(newsql)); // an array of objects is returned
       setError(null);
@@ -80,60 +89,41 @@ function SQLRepl({ db }) {
 
   return (
     <div className="App">
-        <h1>HanPoly</h1>
+      <h1>HanPoly</h1>
       <p>search Chinese characters (Unicode alias: Han)
-          and some of their romanization (MC pinyin, pinyin, jyutping etc.)</p>
-        <p>(only showing 100 results)</p>
+         and some of their romanization (MC pinyin, pinyin, jyutping etc.)</p>
+      <p>(only showing 100 results)</p>
 
       <textarea
-    onChange={(e) => exec(e.target.value)}
-    placeholder="Enter a Chinese character or romanization (MC pinyin, pinyin, jyutping etc.)
+        onChange={(e) => exec(e.target.value)}
+        placeholder="Enter a Chinese character or romanization (MC pinyin, pinyin, jyutping etc.)
                      No inspiration ? Try `文` or `myon`"
-    />
+      />
+
+      <FormControlLabel control={<Switch
+            checked={isCardMode}
+            onChange={() => setIsCardMode(!isCardMode)}
+            name="Use Card Mode"
+            color="primary"
+          />} label="Use Card Mode" />
+      
 
       <pre className="error">{(error || "").toString()}</pre>
 
       <pre>
         {
-          // results contains one object per select statement in the query
-          results.map(({ columns, values }, i) => (
-            <ResultsTable key={i} columns={columns} values={values} />
-          ))
+          !isCardMode?(
+            // results contains one object per select statement in the query
+            results.map(({ columns, values }, i) => (
+              <ResultsTable key={i} columns={columns} values={values} />
+            ))
+          ):(
+            results.map(({ columns, values }, i) => (
+              <HansContainer key={i} columns={columns} data={values}/>
+            ))
+          )
         }
       </pre>
     </div>
-  );
-}
-
-/**
- * Renders a single value of the array returned by db.exec(...) as a table
- * @param {import("sql.js").QueryExecResult} props
- */
-function ResultsTable({ columns, values }) {
-  return (
-    <table>
-      <thead>
-        <tr>
-            <td key={-1}>Han</td>
-          {columns.map((columnName, i) => (
-            <td key={i}>{columnName}</td>
-          ))}
-        </tr>
-      </thead>
-
-      <tbody>
-        {
-          // values is an array of arrays representing the results of the query
-          values.map((row, i) => (
-            <tr key={i}>
-                <td key={-1}>{String.fromCodePoint(Number('0x' + row[0]))}</td>
-              {row.map((value, i) => (
-                <td key={i}>{value}</td>
-              ))}
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
   );
 }

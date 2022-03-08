@@ -3,32 +3,39 @@
   font-size: 1.5em;
 }
 
+body {
+	background: #141414;
+	color: #cccaca;
+	/*#25a0da;*/
+}
+
 textarea {
   font-size: 1.1em;
   width: 70%;
   display: block;
   margin: auto;
+  background-color: #030303;
+  color: #cccaca;
 }
 
 table {
-  border: 1px solid #1c6ea4;
-  background-color: #eeeeee;
-  width: 40%;
+  background-color: #030303;
+  color: #cccaca;
+  width: 20%;
   margin: 1.5em auto;
   text-align: left;
   border-collapse: collapse;
-  text-align: right;
 }
 
 thead {
   font-weight: bold;
   text-align: center;
-  border: 2px solid #999;
+  border: 2px solid #cccaca;
 }
 
 th,
 td {
-  border: 1px solid #aaa;
+  border: 1px solid #cccaca;
 }
 
 .error {
