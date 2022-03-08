@@ -1,5 +1,8 @@
 # HanPolyJS
- HanPoly with pure react (no independent backend)
+
+HanPoly with pure react (no independent backend)
+
+Whereby you can search Chinese characters (Unicode alias: Han) (CJKV Unified Ideographs) and some of their romanization (Middle Chinese pinyin (by `polyhedron`), pinyin, jyutping, Japanese romaji etc.)
 
 It can now be accessed on: https://hanpoly.on.fleek.co/
 
