@@ -10,6 +10,8 @@ export default function App() {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
 
+
+
   useEffect(async () => {
     // sql.js needs to fetch its wasm file, so we cannot immediately instantiate the database
     // without any configuration, initSqlJs will fetch the wasm files directly from the same path as the js
