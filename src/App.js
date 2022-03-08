@@ -5,7 +5,6 @@ import {HashRouter as Router} from 'react-router-dom';
 
 // Required to let webpack 4 know it needs to copy the wasm file to our assets
 import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm";
-// import mcp from "!!!raw-loader!./mcpdict.db"
 
 export default function App() {
   const [db, setDb] = useState(null);
@@ -33,6 +32,10 @@ export default function App() {
   else return <SQLRepl db={db} />;
 }
 
+function isChinese(s) {
+    return /[\u4e00-\u9fa5]/.test(s);
+}
+
 /**
  * A simple SQL read-eval-print-loop
  * @param {{db: import("sql.js").Database}} props
@@ -45,7 +48,28 @@ function SQLRepl({ db }) {
     try {
       // The sql is executed synchronously on the UI thread.
       // You may want to use a web worker here instead
-      setResults(db.exec(sql)); // an array of objects is returned
+        let newsql = "";
+        if (isChinese(sql)) {
+            let unicode = ''
+            unicode += sql.charCodeAt(0).toString(16);
+            newsql = `SELECT * FROM mcpdict WHERE unicode LIKE '%${unicode}%'`
+        } else {
+            newsql = `SELECT * FROM mcpdict 
+                         WHERE mc LIKE '%${sql}%' 
+                         OR pu LIKE '%${sql}%'
+                         OR ct LIKE '%${sql}%'
+                         OR sh LIKE '%${sql}%'
+                         OR mn LIKE '%${sql}%'
+                         OR kr LIKE '%${sql}%'
+                         OR vn LIKE '%${sql}%'
+                         OR jp_go LIKE '%${sql}%'
+                         OR jp_kan LIKE '%${sql}%'
+                         OR jp_tou LIKE '%${sql}%'
+                         OR jp_kwan LIKE '%${sql}%'
+                         OR jp_other LIKE '%${sql}%'
+                         LIMIT 100`
+        }
+      setResults(db.exec(newsql)); // an array of objects is returned
       setError(null);
     } catch (err) {
       // exec throws an error when the SQL statement is invalid
@@ -56,12 +80,16 @@ function SQLRepl({ db }) {
 
   return (
     <div className="App">
-      <h1>React SQL interpreter</h1>
+        <h1>HanPoly</h1>
+      <p>search Chinese characters (Unicode alias: Han)
+          and some of their romanization (MC pinyin, pinyin, jyutping etc.)</p>
+        <p>(only showing 100 results)</p>
 
       <textarea
-        onChange={(e) => exec(e.target.value)}
-        placeholder="Enter some SQL. No inspiration ? Try “select sqlite_version()”"
-      ></textarea>
+    onChange={(e) => exec(e.target.value)}
+    placeholder="Enter a Chinese character or romanization (MC pinyin, pinyin, jyutping etc.)
+                     No inspiration ? Try `文` or `myon`"
+    />
 
       <pre className="error">{(error || "").toString()}</pre>
 
@@ -86,6 +114,7 @@ function ResultsTable({ columns, values }) {
     <table>
       <thead>
         <tr>
+            <td key={-1}>Han</td>
           {columns.map((columnName, i) => (
             <td key={i}>{columnName}</td>
           ))}
@@ -97,6 +126,7 @@ function ResultsTable({ columns, values }) {
           // values is an array of arrays representing the results of the query
           values.map((row, i) => (
             <tr key={i}>
+                <td key={-1}>{String.fromCodePoint(Number('0x' + row[0]))}</td>
               {row.map((value, i) => (
                 <td key={i}>{value}</td>
               ))}
