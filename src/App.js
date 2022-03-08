@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
 import initSqlJs from "sql.js";
+import {HashRouter as Router} from 'react-router-dom';
 
 // Required to let webpack 4 know it needs to copy the wasm file to our assets
 import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm";
@@ -18,7 +19,7 @@ export default function App() {
     // see ../craco.config.js
     try {
       const SQL = await initSqlJs({ locateFile: () => sqlWasm });
-      const dataPromise = fetch("/db/mcpdict.db").then(res => res.arrayBuffer());
+      const dataPromise = fetch("https://pustofrankyang.github.io/db/mcpdict.db", {mode:'cors'}).then(res => res.arrayBuffer());
       const [buf] = await Promise.all([dataPromise])
       //   console.log(typeof(mcp))
       setDb(new SQL.Database(new Uint8Array(buf)));
