@@ -38,7 +38,7 @@ const HanCard = ({ rowdata }) => {
 
     return (
         <div>
-            <Card raised className="card-container">
+            <Card raised className="card-container" sx={{ minWidth: 275 }}>
                 <div className="card-content">
                     <CardContent>
                         <Table size="small" aria-label="a dense table">

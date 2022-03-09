@@ -6,11 +6,11 @@ import "../styles.css";
 const HansContainer = ({ columns, data }) => {
     return (
         <div>
-            <Grid container className="hans-container" spacing={1}>
+            <Grid container fixed className="hans-container" spacing={1}>
                     
                 {data.map(
                     (row, i) =>
-                    <Grid key={i} item xs={3}>
+                    <Grid key={i} item xs={12} sm={4}>
                         <HanCard key={i} rowdata={row}/>
                     </Grid>
                 )}
