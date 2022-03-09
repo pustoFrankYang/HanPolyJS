@@ -27,16 +27,17 @@ table {
   border-collapse: collapse;
 }
 
-thead {
+.results-table thead {
   font-weight: bold;
   text-align: center;
   border: 2px solid #cccaca;
 }
 
-th,
-td {
+.results-table th,
+.results-table td {
   border: 1px solid #cccaca;
 }
+
 
 .error {
   color: #922;

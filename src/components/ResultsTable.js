@@ -6,7 +6,7 @@ import "../styles.css";
  */
 const ResultsTable = ({ columns, values }) => {
     return (
-        <table>
+        <table class="results-table">
           <thead>
             <tr>
                 <td key={-1}>Han</td>

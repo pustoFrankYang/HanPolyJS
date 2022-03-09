@@ -25,7 +25,7 @@ const HanCard = ({ rowdata }) => {
         createData(<abbr title="Shanghainese">吴 sh</abbr>, rowdata[4]),
         createData(<abbr title="Southern Min">闽 mn</abbr>, rowdata[5]),
         createData(<abbr title="Korean">韩 kr</abbr>, rowdata[6]),
-        createData(<abbr title="Viernamese">越 vn</abbr>, rowdata[7]),
+        createData(<abbr title="Vietnamese">越 vn</abbr>, rowdata[7]),
         createData(<abbr title="Japanese Go-on">日·吴 jp-go</abbr>, rowdata[8]),
         createData(<abbr title="Japanese Kan-on">日·汉 jp-kan</abbr>, rowdata[9])
     ]
@@ -38,32 +38,36 @@ const HanCard = ({ rowdata }) => {
 
     return (
         <div>
-            <Card raised className="card-container" sx={{ minWidth: 275 }}>
-                <div className="card-content">
-                    <CardContent>
-                        <Table size="small" aria-label="a dense table">
-                            <TableBody>
-                                {cells.map(
-                                    (row, i) => (
-                                        <TableRow
-                                            key={i}
-                                            // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell scope="row" key={i + 'cell1'}>
-                                                {row.k}
-                                            </TableCell>
-                                            <TableCell key={i + 'cell2'} align="left" style={{
-                                                    whiteSpace: "normal",
-                                                    wordWrap: "break-word"
-                                                    }}>{row.v?row.v.replaceAll(',', ', '):''}</TableCell>
-                                        </TableRow>
-                                    )
-                                )}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </div>
-            </Card>
+        <Card raised className="card-container" sx={{ minWidth: 275 }}>
+        <div className="card-content">
+        <CardContent>
+        <Table size="small" aria-label="a dense table">
+            <colgroup>
+                <col style={{width:'28%'}}/>
+                <col style={{width:'72%'}}/>
+            </colgroup>
+            <TableBody>
+                {cells.map(
+                    (row, i) => (
+                        <TableRow
+                            key={i}
+                            // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell scope="row" key={i + 'cell1'}>
+                                {row.k}
+                            </TableCell>
+                            <TableCell key={i + 'cell2'} align="left" style={{
+                                    whiteSpace: "normal",
+                                    wordWrap: "break-word"
+                                    }}> {row.v?row.v.replaceAll(',', ', '):''} </TableCell>
+                        </TableRow>
+                    )
+                )}
+            </TableBody>
+        </Table>
+        </CardContent>
+        </div>
+        </Card>
         </div>
     )
 }
