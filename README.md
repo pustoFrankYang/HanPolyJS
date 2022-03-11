@@ -10,9 +10,11 @@ Looking forward to your feedback.
 
 # TODO List
 
-- [ ] Pagination
-- [ ] Unify card size
-- [ ] Interprete the formatting symbols in the sqlite, like those form gray font
+- [ ] Diaplay a random character from the 3500 most common list
+- [ ] Transformation of different forms of characters (simplified, traditional, and other forms)
 - [ ] Other ways to display, e.g. jp, kr, vn scripts, IPA
+- [ ] Interprete the formatting symbols in the sqlite, like those form gray font
 - [ ] Better ways to search on the romanizations
 - [ ] My practice (3500 common characters first)
+- [ ] Pagination
+- [ ] Unify card size
