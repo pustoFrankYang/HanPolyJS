@@ -4,10 +4,13 @@ import initSqlJs from "sql.js";
 import ResultsTable from "./components/ResultsTable"
 import {HashRouter as Router} from 'react-router-dom';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container'
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 
 
 import HansContainer from './components/HansContainer'
@@ -114,11 +117,13 @@ function SQLRepl({ db }) {
   }
 
   return (
-    <div className="App">
+    <Container className="App">
       <h1>HanPoly</h1>
+      <Typography variant="body2" gutterBottom>
       <p>search Chinese characters (Unicode alias: Han)
-         and some of their romanization (MC pinyin, pinyin, jyutping etc.)</p>
-      <p>(only showing 100 results)</p>
+         and some of their romanizations for many languages and dialects.</p>
+      </Typography>
+      
 
       <textarea
         id="queryTextarea"
@@ -132,11 +137,14 @@ function SQLRepl({ db }) {
         <FormControlLabel control={<Switch
               checked={isCardMode}
               onChange={() => setIsCardMode(!isCardMode)}
-              name="Use Card Mode"
+              name="Card Mode"
               color="primary"
-            />} label="Use Card Mode" />
-      
-        <Button onClick={handleClickRandom}>Random Han (3500 Common)</Button>
+            />} label="Card Mode" />
+
+        <Tooltip title="Get a Random Han from the 3500 Most Common Characters">
+          <Button onClick={handleClickRandom}>Random Han</Button>
+        </Tooltip>
+        
 
       </Stack>
       
@@ -157,6 +165,6 @@ function SQLRepl({ db }) {
           )
         }
       </pre>
-    </div>
+    </Container>
   );
 }

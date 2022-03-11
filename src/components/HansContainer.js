@@ -7,7 +7,8 @@ const HansContainer = ({ columns, data }) => {
     return (
         <div>
         <Grid container className="hans-container" spacing={1} 
-                direction="row" justifyContent="center" alignItems="stretch">
+                direction="row" justifyContent="flex-start" 
+                alignItems="stretch">
             {data.map(
                 (row, i) =>
                 <Grid key={i} item xs={12} sm={4}>

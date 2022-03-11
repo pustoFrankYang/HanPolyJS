@@ -11,9 +11,8 @@ body {
 
 textarea {
   font-size: 1.1em;
-  width: 70%;
+  width: 60%;
   display: block;
-  margin: auto;
   background-color: #030303;
   color: #cccaca;
 }

@@ -43,8 +43,8 @@ const HanCard = ({ rowdata }) => {
         <CardContent>
         <Table size="small" aria-label="a dense table">
             <colgroup>
-                <col style={{width:'28%'}}/>
-                <col style={{width:'72%'}}/>
+                <col style={{width:'30%'}}/>
+                <col style={{width:'70%'}}/>
             </colgroup>
             <TableBody>
                 {cells.map(
