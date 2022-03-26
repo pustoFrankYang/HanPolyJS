@@ -10,7 +10,8 @@ Looking forward to your feedback.
 
 # TODO List
 
-- [ ] Diaplay a random character from the 3500 most common list
+- [x] Diaplay a random character from the 3500 most common list
+- [ ] Highlight languages selected from a checkbox
 - [ ] Transformation of different forms of characters (simplified, traditional, and other forms)
 - [ ] Other ways to display, e.g. jp, kr, vn scripts, IPA
 - [ ] Interprete the formatting symbols in the sqlite, like those form gray font
