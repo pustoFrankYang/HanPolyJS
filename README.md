@@ -17,6 +17,7 @@ Looking forward to your feedback.
 - [x] Diaplay a random character from the 3500 most common list
 - [x] Transformation of different forms of characters (simplified, traditional, and other forms) (current only simp and trad)
 - [ ] Add TUPA
+- [ ] Search multiple characters
 - [ ] Highlight languages selected from a checkbox
 - [ ] Other ways to display, e.g. jp, kr, vn scripts, IPA
 - [ ] Interprete the formatting symbols in the sqlite, like those form gray font

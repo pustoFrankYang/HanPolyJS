@@ -12,6 +12,7 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import * as OpenCC from 'opencc-js';
+import * as Qieyun from 'qieyun';
 
 import HansContainer from './components/HansContainer'
 
@@ -83,7 +84,11 @@ function SQLRepl({ db }) {
     setResults([]);
     try {
       // strange as the return format of the sqlite db lib
-      let res = [{ columns: [], values: [] }];
+      // columns from the sqlite: ['unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other']
+      let res = [{ 
+        columns: ['qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'], 
+        values: [] 
+      }];
       // The sql is executed synchronously on the UI thread.
       // You may want to use a web worker here instead
       for (let item of [...new Set(itemsConvertedToYitizi)]) {
@@ -111,7 +116,15 @@ function SQLRepl({ db }) {
         setError(null);
         let newRes = db.exec(newsql);
         if (newRes) {
-          res[0].columns = newRes[0].columns
+          newRes[0].values = newRes[0].values.map((entry, i) => 
+            {
+              const han = String.fromCodePoint(Number('0x' + entry[0]));
+              const 最简描述列表 = Qieyun.資料.query字頭(han).map((v, i) => v.音韻地位.最簡描述);
+              entry.unshift(最简描述列表.join(',')); 
+              return entry
+            }
+          )
+          console.log(newRes[0].values)
           res[0].values = res[0].values.concat(newRes[0].values)
         }
       }
