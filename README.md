@@ -8,6 +8,8 @@ Chinese character conversion thanks to [OpenCC.js](https://github.com/nk2028/ope
 
 Middle Chinese phonology analysis thanks to [Qieyun.js](https://github.com/nk2028/qieyun-js).
 
+⚠️ In order to query the SQLite file from https://github.com/MaigoAkisame/MCPDict , I refered to https://github.com/sql-js/react-sqljs-demo but that made some updating of npm packages more difficult, which I guess is the reason I can't import tupa from [qieyun-examples](https://github.com/nk2028/qieyun-examples) properly and I changed it to be `src/lib/tupa.js` in this project. Since this way of using SQLite may cause further problems, it might be better to change it.
+
 It can now be accessed on: https://yangchnx.com/hanpoly
 
 Looking forward to your feedback.
@@ -16,7 +18,7 @@ Looking forward to your feedback.
 
 - [x] Diaplay a random character from the 3500 most common list
 - [x] Transformation of different forms of characters (simplified, traditional, and other forms) (current only simp and trad)
-- [ ] Add TUPA
+- [x] Add TUPA
 - [ ] Search multiple characters
 - [ ] Highlight languages selected from a checkbox
 - [ ] Other ways to display, e.g. jp, kr, vn scripts, IPA

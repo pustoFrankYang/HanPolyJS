@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 
 import "../styles.css";
 
-const fields = ['qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'];
+const fields = ['tupa', 'qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'];
 
 function createData( k, v ) {
     if (k == '字 Han')
@@ -21,6 +21,7 @@ function createData( k, v ) {
 const HanCard = ({ rowdata }) => {
     const cells = [
         createData('字 Han', rowdata[fields.indexOf('unicode')]),
+        createData(<abbr title="TUPA, Tshet-uinh Phonetic Alphabet">切拼 TUPA</abbr>, rowdata[fields.indexOf('tupa')]),
         createData(<abbr title="Phonological properties in Qieyun, 最简描述">切韵地位 Qieyun</abbr>, rowdata[fields.indexOf('qieyun')]),
         createData(<abbr title="Middle Chinese Transcription (polyhedron's 中古漢語拼音)">中古 MCP</abbr>, rowdata[fields.indexOf('mc')]),
         createData(<abbr title="Putonghua, Mandarin Chinese">普 mandarin</abbr>, rowdata[fields.indexOf('pu')]),

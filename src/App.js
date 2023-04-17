@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import * as OpenCC from 'opencc-js';
 import * as Qieyun from 'qieyun';
+import tupa from './lib/tupa';
 
 import HansContainer from './components/HansContainer'
 
@@ -86,7 +87,7 @@ function SQLRepl({ db }) {
       // strange as the return format of the sqlite db lib
       // columns from the sqlite: ['unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other']
       let res = [{ 
-        columns: ['qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'], 
+        columns: ['tupa', 'qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'], 
         values: [] 
       }];
       // The sql is executed synchronously on the UI thread.
@@ -119,8 +120,9 @@ function SQLRepl({ db }) {
           newRes[0].values = newRes[0].values.map((entry, i) => 
             {
               const han = String.fromCodePoint(Number('0x' + entry[0]));
-              const 最简描述列表 = Qieyun.資料.query字頭(han).map((v, i) => v.音韻地位.最簡描述);
-              entry.unshift(最简描述列表.join(',')); 
+              const 音韻地位列表 = Qieyun.資料.query字頭(han).map((v, i) => v.音韻地位);
+              entry.unshift(音韻地位列表.map((v, i) => v.描述).join(',')); 
+              entry.unshift(音韻地位列表.map((v, i) => tupa(v)).join(',')); 
               return entry
             }
           )
