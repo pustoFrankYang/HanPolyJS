@@ -1,6 +1,6 @@
 import "../styles.css";
 
-const fields = ['qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'];
+const fields = ['tupa', 'qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'];
 
 /**
  * Renders a single value of the array returned by db.exec(...) as a table
