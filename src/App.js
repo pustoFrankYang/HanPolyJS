@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./styles.css";
 import initSqlJs from "sql.js";
 import ResultsTable from "./components/ResultsTable"
-import {HashRouter as Router} from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container'
 import FormGroup from '@mui/material/FormGroup';
@@ -11,17 +11,20 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-
+import * as OpenCC from 'opencc-js';
 
 import HansContainer from './components/HansContainer'
 
 // Required to let webpack 4 know it needs to copy the wasm file to our assets
 import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm";
 
+const converterTS = OpenCC.Converter({ from: 'hk', to: 'cn' });
+const converterST = OpenCC.Converter({ from: 'cn', to: 'hk' });
+
 export default function App() {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
-  
+
 
 
   useEffect(async () => {
@@ -30,7 +33,7 @@ export default function App() {
     // see ../craco.config.js
     try {
       const SQL = await initSqlJs({ locateFile: () => sqlWasm });
-      const dataPromise = fetch("https://yangchnx.github.io/db/mcpdict.db", {mode:'cors'}).then(res => res.arrayBuffer());
+      const dataPromise = fetch("https://yangchnx.github.io/db/mcpdict.db", { mode: 'cors' }).then(res => res.arrayBuffer());
       const [buf] = await Promise.all([dataPromise])
       //   console.log(typeof(mcp))
       setDb(new SQL.Database(new Uint8Array(buf)));
@@ -45,7 +48,7 @@ export default function App() {
 }
 
 function isChinese(s) {
-    return /[\u4e00-\u9fa5]/.test(s);
+  return /[\u4e00-\u9fa5]/.test(s);
 }
 
 // 2500 Primary Common Characters (Changyongzi) 
@@ -63,7 +66,7 @@ function getRandom3500Han() {
 }
 
 console.log(hansPrim2500.length, hansSecond1000.length)
-for (let i = 0; i < 10; i ++)
+for (let i = 0; i < 10; i++)
   console.log(getRandom3500Han())
 
 /**
@@ -75,34 +78,45 @@ function SQLRepl({ db }) {
   const [results, setResults] = useState([]);
   const [isCardMode, setIsCardMode] = useState(true);
 
-  function exec(sql) {
-    if (sql == '') return;
+  function exec(itemsConvertedToYitizi) {
+    if (itemsConvertedToYitizi == '') return;
+    setResults([]);
     try {
+      // strange as the return format of the sqlite db lib
+      let res = [{ columns: [], values: [] }];
       // The sql is executed synchronously on the UI thread.
       // You may want to use a web worker here instead
+      for (let item of [...new Set(itemsConvertedToYitizi)]) {
         let newsql = "";
-        if (isChinese(sql)) {
-            let unicode = ''
-            unicode += sql.charCodeAt(0).toString(16);
-            newsql = `SELECT * FROM mcpdict WHERE unicode LIKE '%${unicode}%'`
+        if (isChinese(item)) {
+          let unicode = ''
+          unicode += item.charCodeAt(0).toString(16);
+          newsql = `SELECT * FROM mcpdict WHERE unicode LIKE '%${unicode}%'`
         } else {
-            newsql = `SELECT * FROM mcpdict 
-                         WHERE mc LIKE '%${sql}%' 
-                         OR pu LIKE '%${sql}%'
-                         OR ct LIKE '%${sql}%'
-                         OR sh LIKE '%${sql}%'
-                         OR mn LIKE '%${sql}%'
-                         OR kr LIKE '%${sql}%'
-                         OR vn LIKE '%${sql}%'
-                         OR jp_go LIKE '%${sql}%'
-                         OR jp_kan LIKE '%${sql}%'
-                         OR jp_tou LIKE '%${sql}%'
-                         OR jp_kwan LIKE '%${sql}%'
-                         OR jp_other LIKE '%${sql}%'
+          newsql = `SELECT * FROM mcpdict 
+                         WHERE mc LIKE '%${item}%' 
+                         OR pu LIKE '%${item}%'
+                         OR ct LIKE '%${item}%'
+                         OR sh LIKE '%${item}%'
+                         OR mn LIKE '%${item}%'
+                         OR kr LIKE '%${item}%'
+                         OR vn LIKE '%${item}%'
+                         OR jp_go LIKE '%${item}%'
+                         OR jp_kan LIKE '%${item}%'
+                         OR jp_tou LIKE '%${item}%'
+                         OR jp_kwan LIKE '%${item}%'
+                         OR jp_other LIKE '%${item}%'
                          LIMIT 72`
         }
-      setResults(db.exec(newsql)); // an array of objects is returned
-      setError(null);
+        setError(null);
+        let newRes = db.exec(newsql);
+        if (newRes) {
+          res[0].columns = newRes[0].columns
+          res[0].values = res[0].values.concat(newRes[0].values)
+        }
+      }
+      setResults(res); // an array of objects is returned
+
     } catch (err) {
       // exec throws an error when the SQL statement is invalid
       setError(err);
@@ -120,47 +134,49 @@ function SQLRepl({ db }) {
     <Container className="App">
       <h1>HanPoly</h1>
       <Typography variant="body2" gutterBottom>
-      <p>search Chinese characters (Unicode alias: Han)
-         and some of their romanizations for many languages and dialects.</p>
+        <p>search Chinese characters (Unicode alias: Han)
+          and some of their romanizations for many languages and dialects.</p>
       </Typography>
-      
+
 
       <textarea
         id="queryTextarea"
-        onChange={(e) => exec(e.target.value)}
+        onChange={(e) => {
+          exec([converterST(e.target.value), converterTS(e.target.value)])
+        }}
         placeholder="Enter a Chinese character or romanization (MC pinyin, pinyin, jyutping etc.)
                      No inspiration ? Try `文` or `myon`"
       />
 
-      <Stack direction="row" spacing={2}> 
+      <Stack direction="row" spacing={2}>
 
         <FormControlLabel control={<Switch
-              checked={isCardMode}
-              onChange={() => setIsCardMode(!isCardMode)}
-              name="Card Mode"
-              color="primary"
-            />} label="Card Mode" />
+          checked={isCardMode}
+          onChange={() => setIsCardMode(!isCardMode)}
+          name="Card Mode"
+          color="primary"
+        />} label="Card Mode" />
 
         <Tooltip title="Get a Random Han from the 3500 Most Common Characters">
           <Button onClick={handleClickRandom}>Random Han</Button>
         </Tooltip>
-        
+
 
       </Stack>
-      
+
 
       <pre className="error">{(error || "").toString()}</pre>
 
       <pre>
         {
-          !isCardMode?(
+          !isCardMode ? (
             // results contains one object per select statement in the query
             results.map(({ columns, values }, i) => (
               <ResultsTable key={i} columns={columns} values={values} />
             ))
-          ):(
+          ) : (
             results.map(({ columns, values }, i) => (
-              <HansContainer key={i} columns={columns} data={values}/>
+              <HansContainer key={i} columns={columns} data={values} />
             ))
           )
         }
