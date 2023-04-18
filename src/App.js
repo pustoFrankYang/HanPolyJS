@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import * as OpenCC from 'opencc-js';
 import * as Qieyun from 'qieyun';
 import tupa from './lib/tupa';
+import { unt } from "qieyun-examples";
 
 import HansContainer from './components/HansContainer'
 
@@ -82,7 +83,7 @@ function SQLRepl({ db }) {
       // strange as the return format of the sqlite db lib
       // columns from the sqlite: ['unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other']
       let res = [{ 
-        columns: ['tupa', 'qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'], 
+        columns: ['tupa', 'unt-tz', 'qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'], 
         values: [] 
       }];
 
@@ -148,6 +149,7 @@ function SQLRepl({ db }) {
               const han = String.fromCodePoint(Number('0x' + entry[0]));
               const 音韻地位列表 = Qieyun.資料.query字頭(han).map((v, i) => v.音韻地位);
               entry.unshift(音韻地位列表.map((v, i) => v.描述).join(',')); 
+              entry.unshift(音韻地位列表.map((v, i) => unt.schema({版本: '通俗'})(v)).join(',')); 
               entry.unshift(音韻地位列表.map((v, i) => tupa(v)).join(',')); 
               return entry
             }

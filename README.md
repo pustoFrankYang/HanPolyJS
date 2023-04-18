@@ -21,6 +21,7 @@ Looking forward to your feedback.
 - [x] Add TUPA
 - [x] Search multiple characters (or together with romanizations)
 - [x] Interprete the formatting symbols in the sqlite, like those form gray font (`*x*` bold, `|x|` gray)
+- [x] Add 切韻通俗擬音
 - [ ] Highlight languages selected from a checkbox
 - [ ] Other ways to display, e.g. jp, kr, vn scripts, IPA
 - [ ] Better ways to search on the romanizations
