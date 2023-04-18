@@ -12,11 +12,36 @@ import "../styles.css";
 
 const fields = ['tupa', 'qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'];
 
-function createData( k, v ) {
+function createData(k, v) {
     if (k == '字 Han')
-        v = <span style={{ fontSize: 36}}>{String.fromCodePoint(Number('0x' + v))}</span>;
-    return { k, v };
-  }
+        v = <span style={{ fontSize: 36 }}>{String.fromCodePoint(Number('0x' + v))}</span>;
+    v = v ? v.replaceAll ? v.replaceAll(',', ', ') : v : '';
+    let marks = [];
+    for (let p = 0; v && p < v.length; p++) {
+        if (v[p] == '*') {
+            marks.push('*')
+        }
+        if (v[p] == '|') {
+            marks.push('|')
+        }
+    }
+    let newV = null;
+    if (marks.length && marks.length % 2 == 0) {
+        // if v starts with * or |, an empty element will be parts[0]
+        // |ling5|, *liong5*, |ging5|, [long1]
+        // 0:"", 1:"ling5", 2:", ", 3:"liong5", 4:", ", 5:"ging5", 6:", [long1]"
+        let parts = v.split(/[\*\|]/)
+        newV = <>{parts.map((part, i) => {
+            if (i % 2)
+                return (marks[i] == '*' ? <span key={i} style={{ fontWeight: '900' }}>{`${part}`}</span> : <span style={{ color: 'grey' }}>{`${part}`}</span>)
+            return (<span key={i}>{`${part}`}</span>)
+        })}</>
+    } else {
+        newV = v;
+    }
+    console.log(marks)
+    return { k, newV };
+}
 
 const HanCard = ({ rowdata }) => {
     const cells = [
@@ -36,42 +61,42 @@ const HanCard = ({ rowdata }) => {
     if (rowdata[10])
         cells.push(createData(<abbr title="Japanese Tō-on (唐音, 'Tang sound')">日·唐 jp-to</abbr>, rowdata[fields.indexOf('jp_tou')]))
     if (rowdata[11])
-        cells.push(createData(<abbr title="Japanese Kan'yō-on (慣用音, 'customary sound')">日·慣 jp-kwan</abbr>, rowdata[fields.indexOf('jp_kwan')]))    
+        cells.push(createData(<abbr title="Japanese Kan'yō-on (慣用音, 'customary sound')">日·慣 jp-kwan</abbr>, rowdata[fields.indexOf('jp_kwan')]))
     if (rowdata[12])
         cells.push(createData(<abbr title="Japanese Other">日·他 jp-other</abbr>, rowdata[fields.indexOf('jp_other')]))
 
     return (
         <div>
-        <Card raised className="card-container" sx={{ minWidth: 275 }}>
-        <div className="card-content">
-        <CardContent>
-        <Table size="small" aria-label="a dense table">
-            <colgroup>
-                <col style={{width:'30%'}}/>
-                <col style={{width:'70%'}}/>
-            </colgroup>
-            <TableBody>
-                {cells.map(
-                    (row, i) => (
-                        <TableRow
-                            key={i}
-                            // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell scope="row" key={i + 'cell1'}>
-                                {row.k}
-                            </TableCell>
-                            <TableCell key={i + 'cell2'} align="left" style={{
-                                    whiteSpace: "normal",
-                                    wordWrap: "break-word"
-                                    }}> {row.v ? row.v.replaceAll ? row.v.replaceAll(',', ', '): row.v : ''} </TableCell>
-                        </TableRow>
-                    )
-                )}
-            </TableBody>
-        </Table>
-        </CardContent>
-        </div>
-        </Card>
+            <Card raised className="card-container" sx={{ minWidth: 275 }}>
+                <div className="card-content">
+                    <CardContent>
+                        <Table size="small" aria-label="a dense table">
+                            <colgroup>
+                                <col style={{ width: '30%' }} />
+                                <col style={{ width: '70%' }} />
+                            </colgroup>
+                            <TableBody>
+                                {cells.map(
+                                    (row, i) => (
+                                        <TableRow
+                                            key={i}
+                                        // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell scope="row" key={i + 'cell1'}>
+                                                {row.k}
+                                            </TableCell>
+                                            <TableCell key={i + 'cell2'} align="left" style={{
+                                                whiteSpace: "normal",
+                                                wordWrap: "break-word"
+                                            }}> {row.newV} </TableCell>
+                                        </TableRow>
+                                    )
+                                )}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </div>
+            </Card>
         </div>
     )
 }

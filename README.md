@@ -20,9 +20,9 @@ Looking forward to your feedback.
 - [x] Transformation of different forms of characters (simplified, traditional, and other forms) (current only simp and trad)
 - [x] Add TUPA
 - [x] Search multiple characters (or together with romanizations)
+- [x] Interprete the formatting symbols in the sqlite, like those form gray font (`*x*` bold, `|x|` gray)
 - [ ] Highlight languages selected from a checkbox
 - [ ] Other ways to display, e.g. jp, kr, vn scripts, IPA
-- [ ] Interprete the formatting symbols in the sqlite, like those form gray font
 - [ ] Better ways to search on the romanizations
 - [ ] My practice (3500 common characters first)
 - [ ] Pagination
