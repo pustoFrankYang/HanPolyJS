@@ -22,6 +22,8 @@ Looking forward to your feedback.
 - [x] Search multiple characters (or together with romanizations)
 - [x] Interprete the formatting symbols in the sqlite, like those form gray font (`*x*` bold, `|x|` gray)
 - [x] Add 切韻通俗擬音
+- [ ] `Yitizi` npm package see usage in qieyun-autoderiver. 
+- [ ] Variants of Han: Make switches for 不轉化, 僅繁簡 and 異體
 - [ ] Highlight languages selected from a checkbox
 - [ ] Other ways to display, e.g. jp, kr, vn scripts, IPA
 - [ ] Better ways to search on the romanizations

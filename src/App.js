@@ -176,8 +176,8 @@ function SQLRepl({ db }) {
     <Container className="App">
       <h1>HanPoly</h1>
       <Typography variant="body2" gutterBottom>
-        <p>search Chinese characters (Unicode alias: Han)
-          and some of their romanizations for many languages and dialects.</p>
+        search Chinese characters (Unicode alias: Han)
+        and some of their romanizations for many languages and dialects.
       </Typography>
 
 
@@ -186,8 +186,7 @@ function SQLRepl({ db }) {
         onChange={(e) => {
           exec(e.target.value)
         }}
-        placeholder="Enter a Chinese character or romanization (MC pinyin, pinyin, jyutping etc.)
-                     No inspiration ? Try `文` or `myon`"
+        placeholder="Enter Chinese character(s) or romanization(s), or click on `RANDOM HAN`. No inspiration ? Try `文` or `myon`"
       />
 
       <Stack direction="row" spacing={2}>

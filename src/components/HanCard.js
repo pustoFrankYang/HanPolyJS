@@ -33,13 +33,12 @@ function createData(k, v) {
         let parts = v.split(/[\*\|]/)
         newV = <>{parts.map((part, i) => {
             if (i % 2)
-                return (marks[i] == '*' ? <span key={i} style={{ fontWeight: '900' }}>{`${part}`}</span> : <span style={{ color: 'grey' }}>{`${part}`}</span>)
+                return (marks[i] == '*' ? <span key={i} style={{ fontWeight: '900' }}>{`${part}`}</span> : <span key={i} style={{ color: 'grey' }}>{`${part}`}</span>)
             return (<span key={i}>{`${part}`}</span>)
         })}</>
     } else {
         newV = v;
     }
-    console.log(marks)
     return { k, newV };
 }
 
@@ -47,24 +46,24 @@ const HanCard = ({ rowdata }) => {
     const cells = [
         createData('字 Han', rowdata[fields.indexOf('unicode')]),
         createData(<abbr title="TUPA, Tshet-uinh Phonetic Alphabet">切拼 TUPA</abbr>, rowdata[fields.indexOf('tupa')]),
-        createData(<abbr title="切韻通俗擬音 Tshet-uinh thoung-zuok Reconstruction">通俗擬音 unt-tz</abbr>, rowdata[fields.indexOf('unt-tz')]),
-        createData(<abbr title="Phonological properties in Qieyun, 描述">切韵地位 Qieyun</abbr>, rowdata[fields.indexOf('qieyun')]),
-        createData(<abbr title="Middle Chinese Transcription (polyhedron's 中古漢語拼音)">中古 MCP</abbr>, rowdata[fields.indexOf('mc')]),
-        createData(<abbr title="Putonghua, Mandarin Chinese">普 mandarin</abbr>, rowdata[fields.indexOf('pu')]),
-        createData(<abbr title="Cantonese, Yue Chinese">粵 canton</abbr>, rowdata[fields.indexOf('ct')]),
-        createData(<abbr title="Shanghainese, Wu Chinese">吳 sh</abbr>, rowdata[fields.indexOf('sh')]),
-        createData(<abbr title="Hokkien, Southern Min Chinese">閩 mn</abbr>, rowdata[fields.indexOf('mn')]),
-        createData(<abbr title="Korean">韓 kr</abbr>, rowdata[fields.indexOf('kr')]),
-        createData(<abbr title="Vietnamese">越 vn</abbr>, rowdata[fields.indexOf('vn')]),
-        createData(<abbr title="Japanese Go-on (呉音, 'Wu sound')">日·呉 jp-go</abbr>, rowdata[fields.indexOf('jp_go')]),
-        createData(<abbr title="Japanese Kan-on (漢音, 'Han sound')">日·漢 jp-kan</abbr>, rowdata[fields.indexOf('jp_kan')])
+        createData(<abbr title="切韻通俗擬音 Tshet-uinh thoung-zuok Reconstruction by unt">通擬 unt-tz</abbr>, rowdata[fields.indexOf('unt-tz')]),
+        createData(<abbr title="Phonological properties in Qieyun, 切韻音韻地位描述">韻述 Qieyun</abbr>, rowdata[fields.indexOf('qieyun')]),
+        createData(<abbr title="Middle Chinese Transcription (polyhedron's 古韻羅馬字)">古韻 Kyonh</abbr>, rowdata[fields.indexOf('mc')]),
+        createData(<abbr title="Putonghua, Mandarin Chinese">普 cmn</abbr>, rowdata[fields.indexOf('pu')]),
+        createData(<abbr title="Cantonese, Yue Chinese">粵 yue</abbr>, rowdata[fields.indexOf('ct')]),
+        createData(<abbr title="Shanghainese, Wu Chinese">吳 wuu</abbr>, rowdata[fields.indexOf('sh')]),
+        createData(<abbr title="Hokkien, Southern Min Chinese">閩 nan</abbr>, rowdata[fields.indexOf('mn')]),
+        createData(<abbr title="Korean">韓 ko</abbr>, rowdata[fields.indexOf('kr')]),
+        createData(<abbr title="Vietnamese">越 vi</abbr>, rowdata[fields.indexOf('vn')]),
+        createData(<abbr title="Japanese Go-on (呉音, 'Wu sound')">日·呉 ja-go</abbr>, rowdata[fields.indexOf('jp_go')]),
+        createData(<abbr title="Japanese Kan-on (漢音, 'Han sound')">日·漢 ja-kan</abbr>, rowdata[fields.indexOf('jp_kan')])
     ]
-    if (rowdata[10])
-        cells.push(createData(<abbr title="Japanese Tō-on (唐音, 'Tang sound')">日·唐 jp-to</abbr>, rowdata[fields.indexOf('jp_tou')]))
-    if (rowdata[11])
-        cells.push(createData(<abbr title="Japanese Kan'yō-on (慣用音, 'customary sound')">日·慣 jp-kwan</abbr>, rowdata[fields.indexOf('jp_kwan')]))
-    if (rowdata[12])
-        cells.push(createData(<abbr title="Japanese Other">日·他 jp-other</abbr>, rowdata[fields.indexOf('jp_other')]))
+    if (rowdata[fields.indexOf('jp_tou')])
+        cells.push(createData(<abbr title="Japanese Tō-on (唐音, 'Tang sound')">日·唐 ja-to</abbr>, rowdata[fields.indexOf('jp_tou')]))
+    if (rowdata[fields.indexOf('jp_kwan')])
+        cells.push(createData(<abbr title="Japanese Kan'yō-on (慣用音, 'customary sound')">日·慣 ja-kwan</abbr>, rowdata[fields.indexOf('jp_kwan')]))
+    if (rowdata[fields.indexOf('jp_other')])
+        cells.push(createData(<abbr title="Japanese Other sounds">日·他 ja-other</abbr>, rowdata[fields.indexOf('jp_other')]))
 
     return (
         <div>
