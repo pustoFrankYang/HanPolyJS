@@ -37,7 +37,6 @@ export default function App() {
       const SQL = await initSqlJs({ locateFile: () => sqlWasm });
       const dataPromise = fetch("https://yangchnx.github.io/db/mcpdict.db", { mode: 'cors' }).then(res => res.arrayBuffer());
       const [buf] = await Promise.all([dataPromise])
-      //   console.log(typeof(mcp))
       setDb(new SQL.Database(new Uint8Array(buf)));
     } catch (err) {
       setError(err);
@@ -67,10 +66,6 @@ function getRandom3500Han() {
     return hansSecond1000.charAt(Math.floor(Math.random() * 1000));
 }
 
-console.log(hansPrim2500.length, hansSecond1000.length)
-for (let i = 0; i < 10; i++)
-  console.log(getRandom3500Han())
-
 /**
  * A simple SQL read-eval-print-loop
  * @param {{db: import("sql.js").Database}} props
@@ -80,8 +75,8 @@ function SQLRepl({ db }) {
   const [results, setResults] = useState([]);
   const [isCardMode, setIsCardMode] = useState(true);
 
-  function exec(itemsConvertedToYitizi) {
-    if (itemsConvertedToYitizi == '') return;
+  function exec(query) {
+    if (query == '') return;
     setResults([]);
     try {
       // strange as the return format of the sqlite db lib
@@ -90,9 +85,40 @@ function SQLRepl({ db }) {
         columns: ['tupa', 'qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'], 
         values: [] 
       }];
+
+      // split the query to terms
+      // Hans are seperate and converted to Yitizis
+      // consecutive Alphanumeric chars are one term
+      let terms = [];
+      let currAlphaNumTerm = '';
+      for (let i = 0; i < query.length; i ++) {
+        let ch = query[i];
+        if ((/[a-zA-Z0-9]/).test(ch)) {
+          // AlphaNumeric
+          currAlphaNumTerm += ch;
+        } else if (isChinese(query[i])) {
+          // Chinese Char
+          if (currAlphaNumTerm) {
+            terms.push(currAlphaNumTerm);
+            currAlphaNumTerm = '';
+          }
+          terms.push(converterST(ch), converterTS(ch))
+        } else {
+          // Else chars as seperator
+          if (currAlphaNumTerm) {
+            terms.push(currAlphaNumTerm);
+            currAlphaNumTerm = '';
+          }
+        }
+      }
+      if (currAlphaNumTerm) {
+        terms.push(currAlphaNumTerm);
+        currAlphaNumTerm = '';
+      }
+
       // The sql is executed synchronously on the UI thread.
       // You may want to use a web worker here instead
-      for (let item of [...new Set(itemsConvertedToYitizi)]) {
+      for (let item of [...new Set(terms)]) {
         let newsql = "";
         if (isChinese(item)) {
           let unicode = ''
@@ -116,7 +142,7 @@ function SQLRepl({ db }) {
         }
         setError(null);
         let newRes = db.exec(newsql);
-        if (newRes) {
+        if (newRes.length) {
           newRes[0].values = newRes[0].values.map((entry, i) => 
             {
               const han = String.fromCodePoint(Number('0x' + entry[0]));
@@ -126,7 +152,6 @@ function SQLRepl({ db }) {
               return entry
             }
           )
-          console.log(newRes[0].values)
           res[0].values = res[0].values.concat(newRes[0].values)
         }
       }
@@ -157,7 +182,7 @@ function SQLRepl({ db }) {
       <textarea
         id="queryTextarea"
         onChange={(e) => {
-          exec([converterST(e.target.value), converterTS(e.target.value)])
+          exec(e.target.value)
         }}
         placeholder="Enter a Chinese character or romanization (MC pinyin, pinyin, jyutping etc.)
                      No inspiration ? Try `文` or `myon`"
