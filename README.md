@@ -1,6 +1,6 @@
 # HanPolyJS
 
-HanPoly with pure react (no independent backend)
+HanPoly, multiple pronunciations and romanizations of Chinese characters, with react (no backend)
 
 Whereby you can search Chinese characters (Unicode alias: Han) (CJKV Unified Ideographs) and some of their romanization (Tshet-uinh Phonetic Alphabet (TUPA, 切韻拼音, by `nk2028`), Kyonh Middle Chinese pinyin (古韻羅馬字, by `polyhedron`), pinyin, jyutping, Japanese romaji etc.)
 
