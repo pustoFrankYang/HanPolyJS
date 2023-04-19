@@ -4,7 +4,7 @@ HanPoly, multiple pronunciations and romanizations of Chinese characters, with r
 
 Whereby you can search Chinese characters (Unicode alias: Han) (CJKV Unified Ideographs) and some of their romanization (Tshet-uinh Phonetic Alphabet (TUPA, 切韻拼音, by `nk2028`), Kyonh Middle Chinese pinyin (古韻羅馬字, by `polyhedron`), pinyin, jyutping, Japanese romaji etc.)
 
-Chinese character conversion thanks to [OpenCC.js](https://github.com/nk2028/opencc-js). As the most mainly used part, it supports Mainland simplified and HK traditional, but the package [Yitizi](https://github.com/nk2028/yitizi) is more suitable, but only in Node.js.
+Chinese character conversion thanks to [OpenCC.js](https://github.com/nk2028/opencc-js). As the most mainly used part, it supports Mainland simplified and HK traditional, but the package [Yitizi](https://github.com/nk2028/yitizi) is more suitable (ahh I didn't know it can be used as a ES6 module!).
 
 Middle Chinese phonology analysis thanks to [Qieyun.js](https://github.com/nk2028/qieyun-js).
 
@@ -23,8 +23,8 @@ Looking forward to your feedback.
 - [x] Interprete the formatting symbols in the sqlite, like those form gray font (`*x*` bold, `|x|` gray)
 - [x] Add 切韻通俗擬音
 - [x] At least add other standards to trad, to be compatible to like 鋭 銳 (weird tho) (now hk & tw & jp & cn per `OpenCC.js`)
-- [ ] `Yitizi` npm package see usage in qieyun-autoderiver. 
-- [ ] Variants of Han: Make switches for 不轉化, 僅繁簡 and 異體
+- [x] `Yitizi` npm package, see usage in qieyun-autoderiver. 
+- [ ] Select Variants of Han: Make switches for 不轉化, 僅繁簡 and 異體
 - [ ] Add "only show Han from 廣韻"
 - [ ] Also show results (from Qieyun.js) when SQLite not loaded
 - [ ] Highlight languages selected from a checkbox

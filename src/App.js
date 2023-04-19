@@ -13,6 +13,7 @@ import initSqlJs from "sql.js";
 import ResultsTable from "./components/ResultsTable";
 import tupa from './lib/tupa';
 import "./styles.css";
+import Yitizi from "yitizi";
 
 import HansContainer from './components/HansContainer';
 
@@ -104,6 +105,7 @@ function SQLRepl({ db }) {
                     // Add Han variants to `terms`
                     let ch_hk = converterCH(ch);
                     terms.push(ch_hk, converterHT(ch_hk), converterHC(ch_hk), converterHJ(ch_hk))
+                    terms = terms.concat(Yitizi.get(ch))
                 } else {
                     // Else chars as seperator
                     if (currAlphaNumTerm) {
