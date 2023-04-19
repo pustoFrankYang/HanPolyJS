@@ -1,11 +1,5 @@
-import React, { useState, useEffect } from "react";
-import "./styles.css";
-import initSqlJs from "sql.js";
-import ResultsTable from "./components/ResultsTable"
-import { HashRouter as Router } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container'
-import FormGroup from '@mui/material/FormGroup';
+import Container from '@mui/material/Container';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
@@ -13,10 +7,14 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import * as OpenCC from 'opencc-js';
 import * as Qieyun from 'qieyun';
-import tupa from './lib/tupa';
 import { unt } from "qieyun-examples";
+import React, { useEffect, useState } from "react";
+import initSqlJs from "sql.js";
+import ResultsTable from "./components/ResultsTable";
+import tupa from './lib/tupa';
+import "./styles.css";
 
-import HansContainer from './components/HansContainer'
+import HansContainer from './components/HansContainer';
 
 // Required to let webpack 4 know it needs to copy the wasm file to our assets
 import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm";
@@ -25,32 +23,30 @@ const converterTS = OpenCC.Converter({ from: 'hk', to: 'cn' });
 const converterST = OpenCC.Converter({ from: 'cn', to: 'hk' });
 
 export default function App() {
-  const [db, setDb] = useState(null);
-  const [error, setError] = useState(null);
+    const [db, setDb] = useState(null);
+    const [error, setError] = useState(null);
 
+    useEffect(async () => {
+        // sql.js needs to fetch its wasm file, so we cannot immediately instantiate the database
+        // without any configuration, initSqlJs will fetch the wasm files directly from the same path as the js
+        // see ../craco.config.js
+        try {
+            const SQL = await initSqlJs({ locateFile: () => sqlWasm });
+            const dataPromise = fetch("https://yangchnx.github.io/db/mcpdict.db", { mode: 'cors' }).then(res => res.arrayBuffer());
+            const [buf] = await Promise.all([dataPromise])
+            setDb(new SQL.Database(new Uint8Array(buf)));
+        } catch (err) {
+            setError(err);
+        }
+    }, []);
 
-
-  useEffect(async () => {
-    // sql.js needs to fetch its wasm file, so we cannot immediately instantiate the database
-    // without any configuration, initSqlJs will fetch the wasm files directly from the same path as the js
-    // see ../craco.config.js
-    try {
-      const SQL = await initSqlJs({ locateFile: () => sqlWasm });
-      const dataPromise = fetch("https://yangchnx.github.io/db/mcpdict.db", { mode: 'cors' }).then(res => res.arrayBuffer());
-      const [buf] = await Promise.all([dataPromise])
-      setDb(new SQL.Database(new Uint8Array(buf)));
-    } catch (err) {
-      setError(err);
-    }
-  }, []);
-
-  if (error) return <pre>{error.toString()}</pre>;
-  else if (!db) return <pre>Loading...</pre>;
-  else return <SQLRepl db={db} />;
+    if (error) return <pre>{error.toString()}</pre>;
+    else if (!db) return <pre>Loading...</pre>;
+    else return <SQLRepl db={db} />;
 }
 
 function isChinese(s) {
-  return /[\u4e00-\u9fa5]/.test(s);
+    return /[\u4e00-\u9fa5]/.test(s);
 }
 
 // 2500 Primary Common Characters (Changyongzi) 
@@ -59,12 +55,12 @@ const hansPrim2500 = '一乙二十丁厂七卜人入八九几儿了力乃刀又�
 const hansSecond1000 = '匕刁丐歹戈夭仑讥冗邓艾夯凸卢叭叽皿凹囚矢乍尔冯玄邦迂邢芋芍吏夷吁吕吆屹廷迄臼仲伦伊肋旭匈凫妆亥汛讳讶讹讼诀弛阱驮驯纫玖玛韧抠扼汞扳抡坎坞抑拟抒芙芜苇芥芯芭杖杉巫杈甫匣轩卤肖吱吠呕呐吟呛吻吭邑囤吮岖牡佑佃伺囱肛肘甸狈鸠彤灸刨庇吝庐闰兑灼沐沛汰沥沦汹沧沪忱诅诈罕屁坠妓姊妒纬玫卦坷坯拓坪坤拄拧拂拙拇拗茉昔苛苫苟苞茁苔枉枢枚枫杭郁矾奈奄殴歧卓昙哎咕呵咙呻咒咆咖帕账贬贮氛秉岳侠侥侣侈卑刽刹肴觅忿瓮肮肪狞庞疟疙疚卒氓炬沽沮泣泞泌沼怔怯宠宛衩祈诡帚屉弧弥陋陌函姆虱叁绅驹绊绎契贰玷玲珊拭拷拱挟垢垛拯荆茸茬荚茵茴荞荠荤荧荔栈柑栅柠枷勃柬砂泵砚鸥轴韭虐昧盹咧昵昭盅勋哆咪哟幽钙钝钠钦钧钮毡氢秕俏俄俐侯徊衍胚胧胎狰饵峦奕咨飒闺闽籽娄烁炫洼柒涎洛恃恍恬恤宦诫诬祠诲屏屎逊陨姚娜蚤骇耘耙秦匿埂捂捍袁捌挫挚捣捅埃耿聂荸莽莱莉莹莺梆栖桦栓桅桩贾酌砸砰砾殉逞哮唠哺剔蚌蚜畔蚣蚪蚓哩圃鸯唁哼唆峭唧峻赂赃钾铆氨秫笆俺赁倔殷耸舀豺豹颁胯胰脐脓逛卿鸵鸳馁凌凄衷郭斋疹紊瓷羔烙浦涡涣涤涧涕涩悍悯窍诺诽袒谆祟恕娩骏琐麸琉琅措捺捶赦埠捻掐掂掖掷掸掺勘聊娶菱菲萎菩萤乾萧萨菇彬梗梧梭曹酝酗厢硅硕奢盔匾颅彪眶晤曼晦冕啡畦趾啃蛆蚯蛉蛀唬啰唾啤啥啸崎逻崔崩婴赊铐铛铝铡铣铭矫秸秽笙笤偎傀躯兜衅徘徙舶舷舵敛翎脯逸凰猖祭烹庶庵痊阎阐眷焊焕鸿涯淑淌淮淆渊淫淳淤淀涮涵惦悴惋寂窒谍谐裆袱祷谒谓谚尉堕隅婉颇绰绷综绽缀巢琳琢琼揍堰揩揽揖彭揣搀搓壹搔葫募蒋蒂韩棱椰焚椎棺榔椭粟棘酣酥硝硫颊雳翘凿棠晰鼎喳遏晾畴跋跛蛔蜒蛤鹃喻啼喧嵌赋赎赐锉锌甥掰氮氯黍筏牍粤逾腌腋腕猩猬惫敦痘痢痪竣翔奠遂焙滞湘渤渺溃溅湃愕惶寓窖窘雇谤犀隘媒媚婿缅缆缔缕骚瑟鹉瑰搪聘斟靴靶蓖蒿蒲蓉楔椿楷榄楞楣酪碘硼碉辐辑频睹睦瞄嗜嗦暇畸跷跺蜈蜗蜕蛹嗅嗡嗤署蜀幌锚锥锨锭锰稚颓筷魁衙腻腮腺鹏肄猿颖煞雏馍馏禀痹廓痴靖誊漓溢溯溶滓溺寞窥窟寝褂裸谬媳嫉缚缤剿赘熬赫蔫摹蔓蔗蔼熙蔚兢榛榕酵碟碴碱碳辕辖雌墅嘁踊蝉嘀幔镀舔熏箍箕箫舆僧孵瘩瘟彰粹漱漩漾慷寡寥谭褐褪隧嫡缨撵撩撮撬擒墩撰鞍蕊蕴樊樟橄敷豌醇磕磅碾憋嘶嘲嘹蝠蝎蝌蝗蝙嘿幢镊镐稽篓膘鲤鲫褒瘪瘤瘫凛澎潭潦澳潘澈澜澄憔懊憎翩褥谴鹤憨履嬉豫缭撼擂擅蕾薛薇擎翰噩橱橙瓢蟥霍霎辙冀踱蹂蟆螃螟噪鹦黔穆篡篷篙篱儒膳鲸瘾瘸糙燎濒憾懈窿缰壕藐檬檐檩檀礁磷瞭瞬瞳瞪曙蹋蟋蟀嚎赡镣魏簇儡徽爵朦臊鳄糜癌懦豁臀藕藤瞻嚣鳍癞瀑襟璧戳攒孽蘑藻鳖蹭蹬簸簿蟹靡癣羹鬓攘蠕巍鳞糯譬霹躏髓蘸镶瓤矗'
 
 function getRandom3500Han() {
-  // Math.floor(Math.random() * (max - min + 1) + min) // included, where Math.random() is [0, 1)
-  // 80% probability to choose primary common chars
-  if (Math.random() <= 0.8)
-    return hansPrim2500.charAt(Math.floor(Math.random() * 2500));
-  else
-    return hansSecond1000.charAt(Math.floor(Math.random() * 1000));
+    // Math.floor(Math.random() * (max - min + 1) + min) // included, where Math.random() is [0, 1)
+    // 80% probability to choose primary common chars
+    if (Math.random() <= 0.8)
+        return hansPrim2500.charAt(Math.floor(Math.random() * 2500));
+    else
+        return hansSecond1000.charAt(Math.floor(Math.random() * 1000));
 }
 
 /**
@@ -72,61 +68,61 @@ function getRandom3500Han() {
  * @param {{db: import("sql.js").Database}} props
  */
 function SQLRepl({ db }) {
-  const [error, setError] = useState(null);
-  const [results, setResults] = useState([]);
-  const [isCardMode, setIsCardMode] = useState(true);
+    const [error, setError] = useState(null);
+    const [results, setResults] = useState([]);
+    const [isCardMode, setIsCardMode] = useState(true);
 
-  function exec(query) {
-    if (query == '') return;
-    setResults([]);
-    try {
-      // strange as the return format of the sqlite db lib
-      // columns from the sqlite: ['unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other']
-      let res = [{ 
-        columns: ['tupa', 'unt-tz', 'qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'], 
-        values: [] 
-      }];
+    function exec(query) {
+        if (query == '') return;
+        setResults([]);
+        try {
+            // strange as the return format of the sqlite db lib
+            // columns from the sqlite: ['unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other']
+            let res = [{
+                columns: ['tupa', 'unt-tz', 'qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'],
+                values: []
+            }];
 
-      // split the query to terms
-      // Hans are seperate and converted to Yitizis
-      // consecutive Alphanumeric chars are one term
-      let terms = [];
-      let currAlphaNumTerm = '';
-      for (let i = 0; i < query.length; i ++) {
-        let ch = query[i];
-        if ((/[a-zA-Z0-9]/).test(ch)) {
-          // AlphaNumeric
-          currAlphaNumTerm += ch;
-        } else if (isChinese(query[i])) {
-          // Chinese Char
-          if (currAlphaNumTerm) {
-            terms.push(currAlphaNumTerm);
-            currAlphaNumTerm = '';
-          }
-          terms.push(converterST(ch), converterTS(ch))
-        } else {
-          // Else chars as seperator
-          if (currAlphaNumTerm) {
-            terms.push(currAlphaNumTerm);
-            currAlphaNumTerm = '';
-          }
-        }
-      }
-      if (currAlphaNumTerm) {
-        terms.push(currAlphaNumTerm);
-        currAlphaNumTerm = '';
-      }
+            // split the query to terms
+            // Hans are seperate and converted to Yitizis
+            // consecutive Alphanumeric chars are one term
+            let terms = [];
+            let currAlphaNumTerm = '';
+            for (let i = 0; i < query.length; i++) {
+                let ch = query[i];
+                if ((/[a-zA-Z0-9]/).test(ch)) {
+                    // AlphaNumeric
+                    currAlphaNumTerm += ch;
+                } else if (isChinese(query[i])) {
+                    // Chinese Char
+                    if (currAlphaNumTerm) {
+                        terms.push(currAlphaNumTerm);
+                        currAlphaNumTerm = '';
+                    }
+                    terms.push(converterST(ch), converterTS(ch))
+                } else {
+                    // Else chars as seperator
+                    if (currAlphaNumTerm) {
+                        terms.push(currAlphaNumTerm);
+                        currAlphaNumTerm = '';
+                    }
+                }
+            }
+            if (currAlphaNumTerm) {
+                terms.push(currAlphaNumTerm);
+                currAlphaNumTerm = '';
+            }
 
-      // The sql is executed synchronously on the UI thread.
-      // You may want to use a web worker here instead
-      for (let item of [...new Set(terms)]) {
-        let newsql = "";
-        if (isChinese(item)) {
-          let unicode = ''
-          unicode += item.charCodeAt(0).toString(16);
-          newsql = `SELECT * FROM mcpdict WHERE unicode LIKE '%${unicode}%'`
-        } else {
-          newsql = `SELECT * FROM mcpdict 
+            // The sql is executed synchronously on the UI thread.
+            // You may want to use a web worker here instead
+            for (let item of [...new Set(terms)]) {
+                let newsql = "";
+                if (isChinese(item)) {
+                    let unicode = ''
+                    unicode += item.charCodeAt(0).toString(16);
+                    newsql = `SELECT * FROM mcpdict WHERE unicode LIKE '%${unicode}%'`
+                } else {
+                    newsql = `SELECT * FROM mcpdict 
                          WHERE mc LIKE '%${item}%' 
                          OR pu LIKE '%${item}%'
                          OR ct LIKE '%${item}%'
@@ -140,88 +136,84 @@ function SQLRepl({ db }) {
                          OR jp_kwan LIKE '%${item}%'
                          OR jp_other LIKE '%${item}%'
                          LIMIT 72`
-        }
-        setError(null);
-        let newRes = db.exec(newsql);
-        if (newRes.length) {
-          newRes[0].values = newRes[0].values.map((entry, i) => 
-            {
-              const han = String.fromCodePoint(Number('0x' + entry[0]));
-              const 音韻地位列表 = Qieyun.資料.query字頭(han).map((v, i) => v.音韻地位);
-              entry.unshift(音韻地位列表.map((v, i) => v.描述).join(',')); 
-              entry.unshift(音韻地位列表.map((v, i) => unt.schema({版本: '通俗'})(v)).join(',')); 
-              entry.unshift(音韻地位列表.map((v, i) => tupa(v)).join(',')); 
-              return entry
+                }
+                setError(null);
+                let newRes = db.exec(newsql);
+                if (newRes.length) {
+                    newRes[0].values = newRes[0].values.map((entry, i) => {
+                        const han = String.fromCodePoint(Number('0x' + entry[0]));
+                        const 音韻地位列表 = Qieyun.資料.query字頭(han).map((v, i) => v.音韻地位);
+                        entry.unshift(音韻地位列表.map((v, i) => v.描述).join(','));
+                        entry.unshift(音韻地位列表.map((v, i) => unt.schema({ 版本: '通俗' })(v)).join(','));
+                        entry.unshift(音韻地位列表.map((v, i) => tupa(v)).join(','));
+                        return entry
+                    })
+                    res[0].values = res[0].values.concat(newRes[0].values)
+                }
             }
-          )
-          res[0].values = res[0].values.concat(newRes[0].values)
-        }
-      }
-      setResults(res); // an array of objects is returned
+            setResults(res); // an array of objects is returned
 
-    } catch (err) {
-      // exec throws an error when the SQL statement is invalid
-      setError(err);
-      setResults([]);
+        } catch (err) {
+            // exec throws an error when the SQL statement is invalid
+            setError(err);
+            setResults([]);
+        }
     }
-  }
 
-  const handleClickRandom = () => {
-    let randHan = getRandom3500Han();
-    document.getElementById('queryTextarea').value = randHan;
-    exec(randHan);
-  }
+    const handleClickRandom = () => {
+        let randHan = getRandom3500Han();
+        document.getElementById('queryTextarea').value = randHan;
+        exec(randHan);
+    }
 
-  return (
-    <Container className="App">
-      <h1>HanPoly</h1>
-      <Typography variant="body2" gutterBottom>
-        search Chinese characters (Unicode alias: Han)
-        and some of their romanizations for many languages and dialects.
-      </Typography>
-
-
-      <textarea
-        id="queryTextarea"
-        onChange={(e) => {
-          exec(e.target.value)
-        }}
-        placeholder="Enter Chinese character(s) or romanization(s), or click on `RANDOM HAN`. No inspiration ? Try `文` or `myon`"
-      />
-
-      <Stack direction="row" spacing={2}>
-
-        <FormControlLabel control={<Switch
-          checked={isCardMode}
-          onChange={() => setIsCardMode(!isCardMode)}
-          name="Card Mode"
-          color="primary"
-        />} label="Card Mode" />
-
-        <Tooltip title="Get a Random Han from the 3500 Most Common Characters">
-          <Button onClick={handleClickRandom}>Random Han</Button>
-        </Tooltip>
+    return (
+        <Container className="App">
+            <h1>HanPoly</h1>
+            <Typography variant="body2" gutterBottom>
+                search Chinese characters (Unicode alias: Han)
+                and some of their romanizations for many languages and dialects.
+            </Typography>
 
 
-      </Stack>
+            <textarea
+                id="queryTextarea"
+                onChange={(e) => exec(e.target.value)}
+                placeholder="Enter Chinese character(s) or romanization(s), or click on `RANDOM HAN`. No inspiration ? Try `文` or `myon`"
+            />
+
+            <Stack direction="row" spacing={2}>
+
+                <FormControlLabel control={<Switch
+                    checked={isCardMode}
+                    onChange={() => setIsCardMode(!isCardMode)}
+                    name="Card Mode"
+                    color="primary"
+                />} label="Card Mode" />
+
+                <Tooltip title="Get a Random Han from the 3500 Most Common Characters">
+                    <Button onClick={handleClickRandom}>Random Han</Button>
+                </Tooltip>
 
 
-      <pre className="error">{(error || "").toString()}</pre>
+            </Stack>
 
-      <pre>
-        {
-          !isCardMode ? (
-            // results contains one object per select statement in the query
-            results.map(({ columns, values }, i) => (
-              <ResultsTable key={i} columns={columns} values={values} />
-            ))
-          ) : (
-            results.map(({ columns, values }, i) => (
-              <HansContainer key={i} columns={columns} data={values} />
-            ))
-          )
-        }
-      </pre>
-    </Container>
-  );
+
+            <pre className="error">{(error || "").toString()}</pre>
+
+            <pre>
+                {
+                    !isCardMode ? (
+                        // results contains one object per select statement in the query
+                        results.map(({ columns, values }, i) => (
+                            <ResultsTable key={i} columns={columns} values={values} />
+                        ))
+                    ) : (
+                        results.map(({ columns, values }, i) => (
+                            <HansContainer key={i} columns={columns} data={values} />
+                        ))
+                    )
+                }
+            </pre>
+        </Container>
+    );
 }

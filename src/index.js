@@ -7,15 +7,15 @@ import App from "./App";
 
 const rootElement = document.getElementById("root");
 const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
+    palette: {
+        mode: 'dark',
+    },
 });
 ReactDOM.render(
-  <React.StrictMode>
-    <ThemeProvider theme={darkTheme}>
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>,
-  rootElement
+    <React.StrictMode>
+        <ThemeProvider theme={darkTheme}>
+            <App />
+        </ThemeProvider>
+    </React.StrictMode>,
+    rootElement
 );

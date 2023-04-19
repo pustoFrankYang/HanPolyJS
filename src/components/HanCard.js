@@ -1,12 +1,10 @@
-import React from 'react'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import React from 'react';
 
 import "../styles.css";
 
@@ -76,22 +74,20 @@ const HanCard = ({ rowdata }) => {
                                 <col style={{ width: '70%' }} />
                             </colgroup>
                             <TableBody>
-                                {cells.map(
-                                    (row, i) => (
-                                        <TableRow
-                                            key={i}
-                                        // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell scope="row" key={i + 'cell1'}>
-                                                {row.k}
-                                            </TableCell>
-                                            <TableCell key={i + 'cell2'} align="left" style={{
-                                                whiteSpace: "normal",
-                                                wordWrap: "break-word"
-                                            }}> {row.newV} </TableCell>
-                                        </TableRow>
-                                    )
-                                )}
+                                {cells.map((row, i) => (
+                                    <TableRow
+                                        key={i}
+                                    // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell scope="row" key={i + 'cell1'}>
+                                            {row.k}
+                                        </TableCell>
+                                        <TableCell key={i + 'cell2'} align="left" style={{
+                                            whiteSpace: "normal",
+                                            wordWrap: "break-word"
+                                        }}> {row.newV} </TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </CardContent>
