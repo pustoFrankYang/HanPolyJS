@@ -71,9 +71,15 @@ function getRandom3500Han() {
  * @param {{db: import("sql.js").Database}} props
  */
 function SQLRepl({ db }) {
+    const [query, setQuery] = useState('');
     const [error, setError] = useState(null);
     const [results, setResults] = useState([]);
     const [isCardMode, setIsCardMode] = useState(true);
+    const [showVariants, setShowVariants] = useState(true);
+
+    useEffect(() => {
+        exec(query);
+    }, [query, showVariants])
 
     function exec(query) {
         if (query == '') return;
@@ -96,16 +102,20 @@ function SQLRepl({ db }) {
                 if ((/[a-zA-Z0-9]/).test(ch)) {
                     // AlphaNumeric
                     currAlphaNumTerm += ch;
-                } else if (isChinese(query[i])) {
+                } else if (isChinese(ch)) {
                     // Chinese Char
                     if (currAlphaNumTerm) {
                         terms.push(currAlphaNumTerm);
                         currAlphaNumTerm = '';
                     }
+                    if (showVariants) {
                     // Add Han variants to `terms`
                     let ch_hk = converterCH(ch);
                     terms.push(ch_hk, converterHT(ch_hk), converterHC(ch_hk), converterHJ(ch_hk))
                     terms = terms.concat(Yitizi.get(ch))
+                    } else {
+                        terms.push(ch);
+                    }
                 } else {
                     // Else chars as seperator
                     if (currAlphaNumTerm) {
@@ -169,7 +179,7 @@ function SQLRepl({ db }) {
     const handleClickRandom = () => {
         let randHan = getRandom3500Han();
         document.getElementById('queryTextarea').value = randHan;
-        exec(randHan);
+        setQuery(randHan);
     }
 
     return (
@@ -183,11 +193,23 @@ function SQLRepl({ db }) {
 
             <textarea
                 id="queryTextarea"
-                onChange={(e) => exec(e.target.value)}
+                onChange={(e) => setQuery(e.target.value)}
                 placeholder="Enter Chinese character(s) or romanization(s), or click on `RANDOM HAN`. No inspiration ? Try `文` or `myon`"
             />
 
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent="flex-start">
+
+                <FormControlLabel control={<Switch
+                    checked={showVariants}
+                    onChange={() => setShowVariants(!showVariants)}
+                    name="繁/簡/異 Conversion"
+                    color="primary"
+                />} label="繁/簡/異 Conversion" />
+
+
+                <Tooltip title="Get a Random Han from the 3500 Most Common Characters">
+                    <Button onClick={handleClickRandom}>Random Han</Button>
+                </Tooltip>
 
                 <FormControlLabel control={<Switch
                     checked={isCardMode}
@@ -195,11 +217,6 @@ function SQLRepl({ db }) {
                     name="Card Mode"
                     color="primary"
                 />} label="Card Mode" />
-
-                <Tooltip title="Get a Random Han from the 3500 Most Common Characters">
-                    <Button onClick={handleClickRandom}>Random Han</Button>
-                </Tooltip>
-
 
             </Stack>
 
