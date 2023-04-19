@@ -19,8 +19,10 @@ import HansContainer from './components/HansContainer';
 // Required to let webpack 4 know it needs to copy the wasm file to our assets
 import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm";
 
-const converterTS = OpenCC.Converter({ from: 'hk', to: 'cn' });
-const converterST = OpenCC.Converter({ from: 'cn', to: 'hk' });
+const converterCH = OpenCC.Converter({ from: 'cn', to: 'hk' });
+const converterHC = OpenCC.Converter({ from: 'hk', to: 'cn' });
+const converterHT = OpenCC.Converter({ from: 'hk', to: 'tw' });
+const converterHJ = OpenCC.Converter({ from: 'hk', to: 'jp' });
 
 export default function App() {
     const [db, setDb] = useState(null);
@@ -99,7 +101,9 @@ function SQLRepl({ db }) {
                         terms.push(currAlphaNumTerm);
                         currAlphaNumTerm = '';
                     }
-                    terms.push(converterST(ch), converterTS(ch))
+                    // Add Han variants to `terms`
+                    let ch_hk = converterCH(ch);
+                    terms.push(ch_hk, converterHT(ch_hk), converterHC(ch_hk), converterHJ(ch_hk))
                 } else {
                     // Else chars as seperator
                     if (currAlphaNumTerm) {
