@@ -76,10 +76,11 @@ function SQLRepl({ db }) {
     const [results, setResults] = useState([]);
     const [isCardMode, setIsCardMode] = useState(true);
     const [showVariants, setShowVariants] = useState(true);
+    const [showGuangyunOnly, setShowGuangyunOnly] = useState(false);
 
     useEffect(() => {
         exec(query);
-    }, [query, showVariants])
+    }, [query, showVariants, showGuangyunOnly])
 
     function exec(query) {
         if (query == '') return;
@@ -108,12 +109,16 @@ function SQLRepl({ db }) {
                         terms.push(currAlphaNumTerm);
                         currAlphaNumTerm = '';
                     }
-                    if (showVariants) {
-                    // Add Han variants to `terms`
-                    let ch_hk = converterCH(ch);
-                    terms.push(ch_hk, converterHT(ch_hk), converterHC(ch_hk), converterHJ(ch_hk))
-                    terms = terms.concat(Yitizi.get(ch))
-                    } else {
+                    if (showGuangyunOnly) {
+                        for (let yitiCh of [ch, ...Yitizi.get(ch)])
+                            if (Qieyun.資料.query字頭(yitiCh).length != 0)
+                                terms.push(yitiCh);
+                    } else if (showVariants) {
+                        // Add Han variants to `terms`
+                        let ch_hk = converterCH(ch);
+                        terms.push(ch_hk, converterHT(ch_hk), converterHC(ch_hk), converterHJ(ch_hk))
+                        terms = terms.concat(Yitizi.get(ch))
+                    } else  {
                         terms.push(ch);
                     }
                 } else {
@@ -197,7 +202,7 @@ function SQLRepl({ db }) {
                 placeholder="Enter Chinese character(s) or romanization(s), or click on `RANDOM HAN`. No inspiration ? Try `文` or `myon`"
             />
 
-            <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent="flex-start">
+            <Stack direction="row" spacing={3} flexWrap="wrap" justifyContent="flex-start">
 
                 <FormControlLabel control={<Switch
                     checked={showVariants}
@@ -206,6 +211,12 @@ function SQLRepl({ db }) {
                     color="primary"
                 />} label="繁/簡/異 Conversion" />
 
+                <FormControlLabel control={<Switch
+                    checked={showGuangyunOnly}
+                    onChange={() => setShowGuangyunOnly(!showGuangyunOnly)}
+                    name="廣韻 Guangyun Only"
+                    color="primary"
+                />} label="廣韻 Guangyun Only" />
 
                 <Tooltip title="Get a Random Han from the 3500 Most Common Characters">
                     <Button onClick={handleClickRandom}>Random Han</Button>

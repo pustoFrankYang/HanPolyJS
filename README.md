@@ -25,7 +25,7 @@ Looking forward to your feedback.
 - [x] At least add other standards to trad, to be compatible to like 鋭 銳 (weird tho) (now hk & tw & jp & cn per `OpenCC.js`)
 - [x] `Yitizi` npm package, see usage in qieyun-autoderiver. 
 - [x] Select Variants of Han: Make switches for 不轉化, 僅繁簡 and 異體 (currently toggle "繁/簡/異 Conversion")
-- [ ] Add "only show Han from 廣韻"
+- [x] Add "only show Han from 廣韻"
 - [ ] Also show results (from Qieyun.js) when SQLite not loaded
 - [ ] Highlight languages selected from a checkbox
 - [ ] Other ways to display, e.g. jp, kr, vn scripts, IPA
