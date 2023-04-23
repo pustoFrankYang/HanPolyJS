@@ -26,6 +26,7 @@ Looking forward to your feedback.
 - [x] `Yitizi` npm package, see usage in qieyun-autoderiver. 
 - [x] Select Variants of Han: Make switches for 不轉化, 僅繁簡 and 異體 (currently toggle "繁/簡/異 Conversion")
 - [x] Add "only show Han from 廣韻"
+- [x] BugFix: for hans like 䎫 and 㵾 (both not in `CJK Unified Ideographs` block (but in `CJK Unified Ideographs Extension A`) and not in the MCDict SQLite (but in 廣韻！) (should change the workflow to not rely on it but just as complimentary))
 - [ ] Also show results (from Qieyun.js) when SQLite not loaded
 - [ ] Highlight languages selected from a checkbox
 - [ ] Other ways to display, e.g. jp, kr, vn scripts, IPA

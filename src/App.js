@@ -49,7 +49,10 @@ export default function App() {
 }
 
 function isChinese(s) {
-    return /[\u4e00-\u9fa5]/.test(s);
+    // CJK Unified Ideographs (4E00–9FFF)
+    // CJK Unified Ideographs Extension A (3400–4DBF)
+    return /[\u4e00-\u9fa5]/.test(s)
+        || /[\u3400-\u4dbf]/.test(s);
 }
 
 // 2500 Primary Common Characters (Changyongzi) 
@@ -160,6 +163,11 @@ function SQLRepl({ db }) {
                 }
                 setError(null);
                 let newRes = db.exec(newsql);
+                if (isChinese(item) && newRes.length == 0)
+                    newRes.push({
+                        columns: ['tupa', 'unt-tz', 'qieyun', 'unicode', 'mc', 'pu', 'ct', 'sh', 'mn', 'kr', 'vn', 'jp_go', 'jp_kan', 'jp_tou', 'jp_kwan', 'jp_other'],
+                        values: [[item.charCodeAt(0).toString(16), '', '', '', '', '', '', '', '', '', '', '', '']]
+                    })
                 if (newRes.length) {
                     newRes[0].values = newRes[0].values.map((entry, i) => {
                         const han = String.fromCodePoint(Number('0x' + entry[0]));
