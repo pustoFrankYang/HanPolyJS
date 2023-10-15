@@ -35,7 +35,7 @@ export default function App() {
         // see ../craco.config.js
         try {
             const SQL = await initSqlJs({ locateFile: () => sqlWasm });
-            const dataPromise = fetch("https://yangchnx.github.io/db/mcpdict.db", { mode: 'cors' }).then(res => res.arrayBuffer());
+            const dataPromise = fetch("https://twaqngu.github.io/db/mcpdict.db", { mode: 'cors' }).then(res => res.arrayBuffer());
             const [buf] = await Promise.all([dataPromise])
             setDb(new SQL.Database(new Uint8Array(buf)));
         } catch (err) {

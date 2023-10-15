@@ -10,7 +10,7 @@ Middle Chinese phonology analysis thanks to [Qieyun.js](https://github.com/nk202
 
 ⚠️ In order to query the SQLite file from https://github.com/MaigoAkisame/MCPDict , I refered to https://github.com/sql-js/react-sqljs-demo but that made some updating of npm packages more difficult, which I guess is the reason I can't import tupa from [qieyun-examples](https://github.com/nk2028/qieyun-examples) properly and I changed it to be `src/lib/tupa.js` in this project. Since this way of using SQLite may cause further problems, it might be better to change it.
 
-It can now be accessed on: https://yangchnx.com/hanpoly
+It can now be accessed on: https://twaqngu.com/hanpoly
 
 Looking forward to your feedback.
 
