@@ -1,8 +1,11 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import {
+  Button,
+  Container,
+  FormControlLabel,
+  TextareaAutosize,
+} from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
@@ -51,7 +54,7 @@ export default function Home({ lang }: { lang: LangCode }) {
     fetchData();
   }, []);
 
-  if (error) return <pre>{(error).toString()}</pre>;
+  if (error) return <pre>{error.toString()}</pre>;
   else if (!db) return <pre>Loading...</pre>;
   else return <SQLRepl db={db} lang={lang} />;
 }
@@ -82,10 +85,10 @@ function getRandom3500Han() {
  * @param {{db: import("sql.js").Database}} props
  */
 interface SqlResultItem {
-    columns: string[];
-    values: string[][];
+  columns: string[];
+  values: string[][];
 }
-function SQLRepl({ db, lang }: { db: Database, lang: LangCode }) {
+function SQLRepl({ db, lang }: { db: Database; lang: LangCode }) {
   const [query, setQuery] = useState("");
   const [error, setError] = useState<any>(null);
   const [results, setResults] = useState<SqlResultItem[]>([]);
@@ -269,46 +272,61 @@ function SQLRepl({ db, lang }: { db: Database, lang: LangCode }) {
 
   return (
     <Container className="App">
-      <h1>{getLocaleText({
-        "zh-Hans": "Hanpoly 汉字多语查询",
-        //"zh-Hant": "浦司圖的個人主頁",
-        "en": "Hanpoly",
-        // "ja": "浦司図のホームページ",
-        // "de": "Homepage von Pusto",
-        // "ko": "포사도 홈페이지",
-        // "ko-Han": "浦司圖 홈페이지",
-        // "eo": "Hejmpaĝo de Pusto",
-        // "fr": "Page d'Accueil de Pusto",
-        // "vi": "Trang cá nhân của Phổ Ti Đồ",
-        // "vi-Han": "張個人𧶮浦司圖",
-        // "es": "Página personal de Pusto",
-        // "tto-bro": "Dnr2Zu DaA Ym3HMeH Tvo2X8aL",
-        // "tto": "XoVhaeG D hnCLo LrnKrHL",
-    }, lang)}</h1>
-      <Typography variant="body2" gutterBottom>
-      {getLocaleText({
-        "zh-Hans": "查询汉字（Unicode 别名: Han）在诸多方言与语言（域外方音）里的发音与罗马字。",
-        //"zh-Hant": "浦司圖的個人主頁",
-        "en": "search Chinese characters (Unicode alias: Han) and some of their " 
-          + "romanizations for many languages (Sino-Xenic pronunciations) and dialects.",
-        // "ja": "浦司図のホームページ",
-        // "de": "Homepage von Pusto",
-        // "ko": "포사도 홈페이지",
-        // "ko-Han": "浦司圖 홈페이지",
-        // "eo": "Hejmpaĝo de Pusto",
-        // "fr": "Page d'Accueil de Pusto",
-        // "vi": "Trang cá nhân của Phổ Ti Đồ",
-        // "vi-Han": "張個人𧶮浦司圖",
-        // "es": "Página personal de Pusto",
-        // "tto-bro": "Dnr2Zu DaA Ym3HMeH Tvo2X8aL",
-        // "tto": "XoVhaeG D hnCLo LrnKrHL",
-    }, lang)}
-        
+      <Typography variant="h2">
+        {getLocaleText(
+          {
+            "zh-Hans": "Hanpoly 汉字多语查询",
+            //"zh-Hant": "浦司圖的個人主頁",
+            en: "Hanpoly",
+            // "ja": "浦司図のホームページ",
+            // "de": "Homepage von Pusto",
+            // "ko": "포사도 홈페이지",
+            // "ko-Han": "浦司圖 홈페이지",
+            // "eo": "Hejmpaĝo de Pusto",
+            // "fr": "Page d'Accueil de Pusto",
+            // "vi": "Trang cá nhân của Phổ Ti Đồ",
+            // "vi-Han": "張個人𧶮浦司圖",
+            // "es": "Página personal de Pusto",
+            // "tto-bro": "Dnr2Zu DaA Ym3HMeH Tvo2X8aL",
+            // "tto": "XoVhaeG D hnCLo LrnKrHL",
+          },
+          lang
+        )}
       </Typography>
+      <br/>
+      <br/>
+      <Typography variant="h6" gutterBottom>
+        {getLocaleText(
+          {
+            "zh-Hans":
+              "查询汉字（Unicode 别名: Han）在诸多方言与语言（域外方音）里的发音与罗马字。",
+            "zh-Hant":
+              "查詢漢字（Unicode 別名：Han）在許多方言和語言（域外方音）中的發音和羅馬字。",
+            en:
+              "search Chinese characters (Unicode alias: Han) and some of their " +
+              "romanizations for many languages (Sino-Xenic pronunciations) and dialects.",
+            ja: "多くの言語（音読み）や方言での漢字（Unicodeエイリアス：Han）とそのローマ字の検索。",
+            de: "Suche nach chinesischen Schriftzeichen (Unicode-Alias: Han) und einigen ihrer Romanisierungen für viele Sprachen (Sino-Xenische Aussprachen) und Dialekte.",
+            ko: "다양한 언어 (한자음) 및 방언에 대한 중국 문자 (유니 코드 별칭 : Han) 및 로마자의 검색.",
+            // "ko-Han": "浦司圖 홈페이지",
+            eo: "Serĉi ĉinajn signojn (Unikodo-nomo: Han) kaj kelkajn romanigojn por multaj lingvoj (Ĉina-Faraj prononcoj) kaj dialektoj.",
+            fr: "rechercher des caractères chinois (alias Unicode : Han) et certaines de leurs romanisations pour de nombreuses langues (prononciations sino-xéniques) et dialectes.",
+            vi: "tìm kiếm ký tự Trung Quốc (tên gọi Unicode: Han) và một số cách viết lại bằng chữ La Tinh cho nhiều ngôn ngữ (Hán Việt) và các tiếng địa phương.",
+            // "vi-Han": "張個人𧶮浦司圖",
+            es: "buscar caracteres chinos (alias Unicode: Han) y algunas de sus romanizaciones para muchos idiomas (pronunciaciones sino-xénicas) y dialectos.",
+            // "tto-bro": "Dnr2Zu DaA Ym3HMeH Tvo2X8aL",
+            // "tto": "XoVhaeG D hnCLo LrnKrHL",
+          },
+          lang
+        )}
+      </Typography>
+      <br/>
 
-      <textarea
+      <TextareaAutosize
         id="queryTextarea"
+        value={query}
         onChange={(e) => setQuery(e.target.value)}
+        style={{ width: "70vw", background: "transparent", fontSize: "1.5rem" }}
         placeholder="Enter Chinese character(s) or romanization(s), or click on `RANDOM HAN`. No inspiration ? Try `文` or `myon`"
       />
 

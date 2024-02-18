@@ -146,7 +146,7 @@ export default function App() {
         },
     ];
 
-    const repoLink = "https://github.com/pustot/index";
+    const repoLink = "https://github.com/pustot/hanpoly";
 
     return (
         <ThemeProvider theme={theme}>
