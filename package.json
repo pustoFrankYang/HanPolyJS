@@ -12,6 +12,9 @@
   ],
   "main": "src/index.js",
   "license": "MIT",
+  "engines": {
+    "node": "<=16"
+  },
   "dependencies": {
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
