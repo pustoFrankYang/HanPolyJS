@@ -1,13 +1,17 @@
 module.exports = {
     webpack: {
-        configure:{
+        configure: {
             // See https://github.com/webpack/webpack/issues/6725
-            module:{
+            module: {
                 rules: [{
                     test: /\.wasm$/,
                     type: 'javascript/auto',
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name]-[contenthash].[ext]'
+                    }
                 }]
             }
         }
-    }
+    },
 };
