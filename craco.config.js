@@ -11,6 +11,13 @@ module.exports = {
                         name: '[name]-[contenthash].[ext]'
                     }
                 }]
+            },
+            resolve: {
+                fallback: {
+                    "crypto": false,
+                    "path": false,
+                    "fs": false
+                }
             }
         }
     },
