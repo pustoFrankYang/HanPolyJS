@@ -1,4 +1,6 @@
-# HanPolyJS
+# HanPoly
+
+> 註：轉型重構中，主要係用csv代替sqlite數據來源，以方便純前端操作，且與集成更多方言數據來源（多爲各種RIME倉庫）之需求相適應。
 
 https://hanpoly.pustot.com/
 
