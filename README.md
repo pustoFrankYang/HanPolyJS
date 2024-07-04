@@ -1,6 +1,10 @@
 # HanPoly
 
-> 註：轉型重構中，主要係用csv代替sqlite數據來源，以方便純前端操作，且與集成更多方言數據來源（多爲各種RIME倉庫）之需求相適應。
+本页为旧版，新版请移步： https://studling.pustot.com/#/zh-ltc/sino-dict
+
+This is archived version. For new version, please visit: https://studling.pustot.com/#/zh-ltc/sino-dict
+
+> 轉型重構，主要係用yaml/csv代替sqlite數據來源，以方便純前端操作，且集成更多方言數據來源（多爲各種RIME倉庫）。
 
 https://hanpoly.pustot.com/
 

@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   FormControlLabel,
+  Link as MuiLink,
   TextareaAutosize,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
@@ -293,6 +294,24 @@ function SQLRepl({ db, lang }: { db: Database; lang: LangCode }) {
           lang
         )}
       </Typography>
+      <br/>
+      <br/>
+      <Typography variant="h6" gutterBottom>
+        {getLocaleText(
+          {
+            "zh-Hans":
+              "本页为旧版，新版请移步：",
+            "zh-Hant":
+              "本頁爲舊版，新版請移步：",
+            en:
+              "This is archived version. For new version, please visit: ",
+          },
+          lang
+        )}
+      </Typography>
+      <Typography variant="body1" sx={{ marginBottom: 2 }}>
+                <MuiLink href="https://studling.pustot.com/#/zh-ltc/sino-dict" target="_blank" rel="noopener">studling.pustot.com/#/zh-ltc/sino-dict</MuiLink>
+            </Typography>
       <br/>
       <br/>
       <Typography variant="h6" gutterBottom>
